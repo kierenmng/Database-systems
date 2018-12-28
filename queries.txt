@@ -1,0 +1,29 @@
+Kieren Ng Project 2 queries.txt
+
+1.
+SELECT * FROM employees WHERE
+(hire_date >
+DATE_SUB((SELECT hire_date FROM employees ORDER BY hire_date DESC LIMIT 1), INTERVAL 1 MONTH)
+)
+INTO OUTFILE '/var/lib/mysql-files/new_hires.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
+
+2.
+CREATE VIEW high_salaries AS
+SELECT salaries.emp_no, employees.first_name, employees.last_name, salary FROM salaries
+INNER JOIN employees
+ON salaries.emp_no = employees.emp_no
+WHERE
+(salaries.salary >=120000 AND salaries.to_date = '9999-01-01');
+
+(For the output file)
+SELECT * FROM high_salaries
+INTO OUTFILE '/var/lib/mysql-files/high_salaries.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
+
+3.
+CREATE VIEW high_salary_names AS
+SELECT high_salaries.last_name, first_name FROM high_salaries
+ORDER BY last_name, first_name;
+
+(For the output file)
+SELECT * FROM high_salary_names
+INTO OUTFILE '/var/lib/mysql-files/high_salary_names.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
